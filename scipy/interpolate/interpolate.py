@@ -734,19 +734,59 @@ class _PPolyBase:
     """Base class for piecewise polynomials."""
     __slots__ = ('c', 'x', 'extrapolate', 'axis')
 
+    
+    
+    
     # sketch of what I wanna do ##############################################################################################
-    def __add__(self, other):
-        
-        # check if it makes sense to add them
-        if not (self.x.shape == other.x.shape) or not (self.x == other.x):
-            raise ValueError("Breakpoints are different.")
+    
+    @classmethod
+    def _check_if_equal(cls, poly_a, poly_b):
+        if not isinstance(poly_b, _PPolyBase)
         
         if not (self.extrapolate == other.extrapolate):
             raise RuntimeError("Extrapolation flags are different.")
         
+        if not (poly_a.x.shape == poly_b.x.shape) and not (poly_a.x == poly_b.x):
+            raise ValueError("Breakpoints are different.")
+
+            
+            
+    def __add__(self, other):
+        # check if it makes sense to add them
+        _PPolyBase._check_if_equal(self, other)
         return _PPolyBase.construct_fast(self.x, self.c + other.c, extrapolate = self.extrapolate, axis = self.axis)
 
+    
+    
+    def __mul__(self, other):
+        
+        if isinstance(other, float) or isintance(other, int):
+            
+            return _PPolyBase.construct_fast(self.x, other*self.c, extrapolate = self.extrapolate, axis = self.axis)
+            # alternatevely, I could alter the current object and return it
+            self.c *= other
+            return self 
+            # cleaner, buuut don't know if it would make intuitive sense in the users program 
+        
+        
+        # this one is harder, gotta see if I can do it directly from the self.c and other.c
+        # otherwise I'll probly need to interpolate it 
+        _PPolyBase._check_if_equal(self, other)
+        return 
 
+    
+    
+    def __sub__(self, other):
+        pass
+        # same as the __add__
+
+    ###################################################################################################################
+    
+    
+    
+    
+    
+    
     def __init__(self, c, x, extrapolate=None, axis=0):
         self.c = np.asarray(c)
         self.x = np.ascontiguousarray(x, dtype=np.float64)
