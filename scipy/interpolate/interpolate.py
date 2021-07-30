@@ -734,6 +734,19 @@ class _PPolyBase:
     """Base class for piecewise polynomials."""
     __slots__ = ('c', 'x', 'extrapolate', 'axis')
 
+    # sketch of what I wanna do ##############################################################################################
+    def __add__(self, other):
+        
+        # check if it makes sense to add them
+        if not (self.x.shape == other.x.shape) or not (self.x == other.x):
+            raise ValueError("Breakpoints are different.")
+        
+        if not (self.extrapolate == other.extrapolate):
+            raise RuntimeError("Extrapolation flags are different.")
+        
+        return _PPolyBase.construct_fast(self.x, self.c + other.c, extrapolate = self.extrapolate, axis = self.axis)
+
+
     def __init__(self, c, x, extrapolate=None, axis=0):
         self.c = np.asarray(c)
         self.x = np.ascontiguousarray(x, dtype=np.float64)
