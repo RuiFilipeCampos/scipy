@@ -741,8 +741,7 @@ class _PPolyBase:
     
     @classmethod
     def _check_if_equal(cls, poly_a, poly_b):
-        if not isinstance(poly_b, _PPolyBase)
-        
+           
         if not (self.extrapolate == other.extrapolate):
             raise RuntimeError("Extrapolation flags are different.")
         
@@ -752,8 +751,17 @@ class _PPolyBase:
             
             
     def __add__(self, other):
+       if isinstance(other, int) or isinstance(other, float):
+           return 
+       
+       if isinstance(other, self.x)
+           
+           
+           
         # check if it makes sense to add them
         _PPolyBase._check_if_equal(self, other)
+           
+           
         return _PPolyBase.construct_fast(self.x, self.c + other.c, extrapolate = self.extrapolate, axis = self.axis)
 
     
@@ -771,7 +779,7 @@ class _PPolyBase:
         
         # this one is harder, gotta see if I can do it directly from the self.c and other.c
         # otherwise I'll probly need to interpolate it 
-        _PPolyBase._check_if_equal(self, other)
+        return _PPolyBase._check_if_equal(self, other)
         return 
 
     
