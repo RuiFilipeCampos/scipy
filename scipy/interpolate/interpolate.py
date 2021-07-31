@@ -739,8 +739,8 @@ class _PPolyBase:
     
     # sketch of what I wanna do ##############################################################################################
     
-    @classmethod
-    def _check_if_equal(cls, poly_a, poly_b):
+    @staticmethod
+    def _check_if_equal(poly_a, poly_b):
            
         if not (self.extrapolate == other.extrapolate):
             raise RuntimeError("Extrapolation flags are different.")
