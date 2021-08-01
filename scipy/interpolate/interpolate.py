@@ -741,30 +741,32 @@ class _PPolyBase:
     
     @staticmethod
     def _check_if_equal(poly_a, poly_b):
+        """
+        """
            
         if not (self.extrapolate == other.extrapolate):
-            raise RuntimeError("Extrapolation flags are different.")
+            raise ValueError("Extrapolation flags are different.")
         
         if not (poly_a.x.shape == poly_b.x.shape) and not (poly_a.x == poly_b.x):
             raise ValueError("Breakpoints are different.")
 
             
-            
     def __add__(self, other):
+        """
+        """
+        
        if isinstance(other, int) or isinstance(other, float):
-           return 
-       
-       if isinstance(other, self.x)
-           
-           
-           
-        # check if it makes sense to add them
-        _PPolyBase._check_if_equal(self, other)
-           
-           
-        return _PPolyBase.construct_fast(self.x, self.c + other.c, extrapolate = self.extrapolate, axis = self.axis)
+           new_c = self.c[:]
+           new_c # check docs on how to modify these coefs for a simple sum...
 
-    
+           return _PPolyBase.construct_fast(self.x, new_c, extrapolate = self.extrapolate, axis = self.axis)
+       
+       if isinstance(other, self.x):
+            # check if it makes sense to add them
+            _PPolyBase._check_if_equal(self, other)
+            return _PPolyBase.construct_fast(self.x, self.c + other.c, extrapolate = self.extrapolate, axis = self.axis)
+        
+        return NotImplemented
     
     def __mul__(self, other):
         
