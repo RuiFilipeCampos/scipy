@@ -956,8 +956,10 @@ class DifferentialEvolutionSolver:
             right-padded with np.inf. Has shape ``(np.size(population, 0),)``
         """
         num_members = np.size(population, 0)
+        # these are the number of function evals left to stay under the
+        # maxfun budget
         nfevs = min(num_members,
-                    self.maxfun - num_members)
+                    self.maxfun - self._nfev)
 
         energies = np.full(num_members, np.inf)
 
@@ -965,7 +967,7 @@ class DifferentialEvolutionSolver:
         try:
             calc_energies = list(self._mapwrapper(self.func,
                                                   parameters_pop[0:nfevs]))
-            energies[0:nfevs] = np.squeeze(calc_energies)
+            calc_energies = np.squeeze(calc_energies)
         except (TypeError, ValueError) as e:
             # wrong number of arguments for _mapwrapper
             # or wrong length returned from the mapper
@@ -973,6 +975,11 @@ class DifferentialEvolutionSolver:
                 "The map-like callable must be of the form f(func, iterable), "
                 "returning a sequence of numbers the same length as 'iterable'"
             ) from e
+
+        if calc_energies.size != nfevs:
+            raise RuntimeError("func(x, *args) must return a scalar value")
+
+        energies[0:nfevs] = calc_energies
 
         self._nfev += nfevs
 
@@ -1168,7 +1175,7 @@ class DifferentialEvolutionSolver:
                                       self.feasible[candidate],
                                       self.constraint_violation[candidate]):
                     self.population[candidate] = trial
-                    self.population_energies[candidate] = energy
+                    self.population_energies[candidate] = np.squeeze(energy)
                     self.feasible[candidate] = feasible
                     self.constraint_violation[candidate] = cv
 
